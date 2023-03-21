@@ -1,6 +1,7 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { APP_PORT } from './settings';
 import { usersRoute } from './routes/users.route';
+import setCors from './middlewares/setCors.middleware';
 
 const app = express();
 
@@ -9,6 +10,9 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
+
+// CORS
+app.use(setCors);
 
 // routes
 app.use("/users", usersRoute);
