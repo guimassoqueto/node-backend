@@ -13,12 +13,12 @@ services:
       - "${MONGO_PORT}:${MONGO_PORT}"
     networks:
       - local
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/productiondb --quiet
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
+    # healthcheck:
+    #   test: echo 'db.runCommand("ping").ok' | mongo 0.0.0.0:27017/test --quiet
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 30s
 
   app:
     container_name: store-backend
@@ -30,7 +30,7 @@ services:
       - local
     depends_on:
       mongodb:
-        condition: service_healthy
+        condition: service_started
       
 
 networks:
