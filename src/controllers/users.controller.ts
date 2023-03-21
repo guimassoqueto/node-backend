@@ -36,9 +36,5 @@ export function getUser(req: Request, res: Response) {
  * Função: insere um usuário
  */
 export function postUser(req: Request, res: Response) {
-  const bodyIsValid: boolean = checkPostUser(req.body);
-
-  if (!bodyIsValid) return res.status(Status.BadRequest).json({error: "invalid body"});
-
   return res.status(Status.Created).json({user: req.body});
 }
