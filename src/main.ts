@@ -7,9 +7,7 @@ const app = express();
 
 // body-parser
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(express.urlencoded({ extended: true }));
 
 // CORS
 app.use(setCors);
