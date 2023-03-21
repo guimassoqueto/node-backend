@@ -1,5 +1,6 @@
 import express from 'express';
 import { APP_PORT } from './settings';
+import { usersRoute } from './routes/users.route';
 
 const app = express();
 
@@ -8,6 +9,9 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
+
+// routes
+app.use("/users", usersRoute);
 
 app.listen(APP_PORT, () => {
   console.log(`Example app listening on port ${APP_PORT}`);
