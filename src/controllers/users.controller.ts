@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Status } from "../utils/statusCodes.util";
 import checkPostUser from "../utils/checkPostUser.util";
 
+
 /**
  * Rota: /user  
  * Método: GET  
@@ -17,6 +18,7 @@ export function getAllUsers(req: Request, res: Response) {
   return res.status(Status.OK).json(mock);
 }
 
+
 /**
  * Rota: /user/:id  
  * Método: GET  
@@ -26,6 +28,7 @@ export function getUser(req: Request, res: Response) {
   const { id } = req.params;
   return res.status(Status.OK).json({id: id});
 }
+
 
 /**
  * Rota: /user  
