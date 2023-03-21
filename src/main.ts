@@ -1,7 +1,8 @@
 import express from 'express';
-import { APP_PORT } from './settings';
+import { APP_PORT, MONGO_URL } from './settings';
 import { usersRoute } from './routes/users.route';
 import setCors from './middlewares/setCors.middleware';
+import mongoose from 'mongoose';
 
 const app = express();
 
@@ -15,6 +16,12 @@ app.use(setCors);
 // routes
 app.use("/users", usersRoute);
 
-app.listen(APP_PORT, () => {
-  console.log(`Example app listening on port ${APP_PORT}`);
+// mongoose
+mongoose.connect(MONGO_URL)
+.then(() => {
+  app.listen(APP_PORT, () => {
+    console.log(`Example app listening on port ${APP_PORT}`);
+  })
 })
+.catch(error => console.error(error))
+
