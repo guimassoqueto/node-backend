@@ -1,14 +1,37 @@
 version: '3.9'
 
 services:
-  backend:
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_ROOT_USERNAME}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_ROOT_PASSWORD}"
+      MONGO_INITDB_DATABASE: "${MONGO_DB_NAME}"
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    networks:
+      - local
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/productiondb --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  app:
     container_name: store-backend
     build:
       dockerfile: ./Dockerfile
     ports:
-      - "${PORT}:${PORT}"
+      - "${APP_PORT}:${APP_PORT}"
     networks:
       - local
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      
 
 networks:
   local:
