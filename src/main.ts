@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import { APP_PORT } from './settings';
 import { usersRoute } from './routes/users.route';
 import setCors from './middlewares/setCors.middleware';
