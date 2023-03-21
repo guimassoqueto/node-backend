@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { Status } from "../utils/statusCodes.util";
-import checkPostUser from "../utils/checkPostUser.util";
-
+import User from "../models/user.model";
 
 /**
  * Rota: /user  
@@ -35,6 +34,16 @@ export function getUser(req: Request, res: Response) {
  * Método: POST  
  * Função: insere um usuário
  */
-export function postUser(req: Request, res: Response) {
-  return res.status(Status.Created).json({user: req.body});
+export async function postUser(req: Request, res: Response) {
+  try {
+    const { name, email } = req.body;
+    const user = new User({ name, email })
+    await user.save();
+
+    return res.status(Status.Created).json({user: { name, email }});
+  }
+  catch (error) {
+    console.error(error)
+    return res.status(Status.ServiceUnavailable).json({message: "Something went wrong"});
+  }
 }
