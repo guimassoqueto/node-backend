@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Status } from "../utils/statusCodes.util";
+import { Status } from "../enums/statusCodes.enum";
 import User from "../models/user.model";
 
 /**

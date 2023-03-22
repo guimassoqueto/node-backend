@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import validator from 'validator';
-import { Status } from '../utils/statusCodes.util';
+import { Status } from '../enums/statusCodes.enum';
 
 type RequestBody = {
   name: string,
@@ -23,6 +23,5 @@ export default function validateRequestBody(req: Request, res: Response, next: N
   if (validator.isEmpty(name.trim())) errors.push({error: "nome vazio", invalidField: "nome"});
   
   if (errors.length) return res.status(Status.BadRequest).json(errors);
-
   next();
 }
