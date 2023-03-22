@@ -5,7 +5,6 @@ RUN npm install -g npm@latest \
     && npm install \
     && npm run build
 
-
 FROM build as runner
 COPY --from=build /app/dist /app
 WORKDIR /app
