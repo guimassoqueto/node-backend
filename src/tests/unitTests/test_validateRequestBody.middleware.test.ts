@@ -14,8 +14,48 @@ describe("validateRequestBody middleware", () => {
     };
   });
 
+  test('invalid body should return error', async () => {
+    const expectedResponse = [{error: "corpo inválido"}];
+    mockRequest = {
+      body: {
+        invalidKey: "test",
+        another: "test"
+      }
+    }
+
+    validateRequestBody(
+      mockRequest as Request,
+      mockResponse as Response,
+      nextFunction
+    );
+
+    expect(mockResponse.status).toBeCalledWith(400);
+    expect(mockResponse.json).toBeCalledWith(expectedResponse);
+    expect(nextFunction).not.toBeCalled();
+  });
+
+  test('short name should return error', async () => {
+    const expectedResponse = [{error: "nome inválido"}];
+    mockRequest = {
+      body: {
+        name: "aa",
+        email: "test@test.com"
+      }
+    }
+
+    validateRequestBody(
+      mockRequest as Request,
+      mockResponse as Response,
+      nextFunction
+    );
+
+    expect(mockResponse.status).toBeCalledWith(400);
+    expect(mockResponse.json).toBeCalledWith(expectedResponse);
+    expect(nextFunction).not.toBeCalled();
+  });
+
   test("wrong email format", async () => {
-    const expectedResponse = [{ error: "email inválido", invalidField: "email" }];
+    const expectedResponse = [{error: "email inválido"}];
 
     mockRequest = {
       body: {
@@ -36,7 +76,7 @@ describe("validateRequestBody middleware", () => {
   });
 
   test("empty name provided should return error", async () => {
-    const expectedResponse = [{error: "nome vazio", invalidField: "nome"}];
+    const expectedResponse = [{error: "nome inválido"}];
 
     mockRequest = {
       body: {
@@ -53,7 +93,28 @@ describe("validateRequestBody middleware", () => {
 
     expect(mockResponse.status).toBeCalledWith(400);
     expect(mockResponse.json).toBeCalledWith(expectedResponse);
-    expect(nextFunction).not.toBeCalled()
+    expect(nextFunction).not.toBeCalled();
+  });
+
+  test("invalid name and email", async () => {
+    const expectedResponse = [{error: "nome inválido"}, {error: "email inválido"}];
+
+    mockRequest = {
+      body: {
+        name: "aa",
+        email: "test"
+      }
+    }
+
+    validateRequestBody(
+      mockRequest as Request,
+      mockResponse as Response,
+      nextFunction
+    );
+
+    expect(mockResponse.status).toBeCalledWith(400);
+    expect(mockResponse.json).toBeCalledWith(expectedResponse);
+    expect(nextFunction).not.toBeCalled();
   });
 
   test('correct request body should pass and call next()', async () => {
