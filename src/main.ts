@@ -1,6 +1,8 @@
 import express from 'express';
 import { APP_PORT, MONGO_URL } from './settings';
 import { usersRoute } from './routes/users.route';
+import { errorsRoute } from './routes/errors.route';
+import errorManager from './middlewares/errorManager.middleware';
 import setCors from './middlewares/setCors.middleware';
 import mongoose from 'mongoose';
 
@@ -16,10 +18,11 @@ app.use(setCors);
 // routes
 app.use("/users", usersRoute);
 
-// mongoose
-mongoose.connect(MONGO_URL)
-.then(() => {
-  app.listen(APP_PORT, () => {
+// rota com erro proposital
+app.use("/errors", errorsRoute);
+
+// middleware que trata todos os erros
+app.use(errorManager);
     console.log(`Example app listening on port ${APP_PORT}`);
   })
 })
