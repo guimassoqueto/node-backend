@@ -1,10 +1,10 @@
 import express from 'express';
-import { APP_PORT, MONGO_URL } from './settings';
 import { usersRoute } from './routes/users.route';
 import { errorsRoute } from './routes/errors.route';
 import errorManager from './middlewares/errorManager.middleware';
 import setCors from './middlewares/setCors.middleware';
-import mongoose from 'mongoose';
+import { mongoConnector } from './database/mongoConnector.database';
+import { APP_PORT } from './settings';
 
 const app = express();
 
@@ -23,8 +23,16 @@ app.use("/errors", errorsRoute);
 
 // middleware que trata todos os erros
 app.use(errorManager);
-    console.log(`Example app listening on port ${APP_PORT}`);
-  })
-})
-.catch(error => console.error(error))
 
+// inicia a aplicação
+(async function main() {
+  try {
+    await mongoConnector
+    console.log(`Example app listening on port ${APP_PORT}`);
+  }
+  catch (error) {
+    console.error("\x1b[31m", 
+      "Erro ao conectar-se ao banco de dados.\n",
+      "Verifique se a variável MONGO_HOST está corretamente definida em .env"
+    )}
+})();
