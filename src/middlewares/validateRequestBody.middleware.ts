@@ -2,26 +2,29 @@ import { Request, Response, NextFunction } from 'express';
 import validator from 'validator';
 import { Status } from '../enums/statusCodes.enum';
 
-type RequestBody = {
-  name: string,
-  email: string
-}
 
-interface iError {
-  error: string;
-  invalidField: string;
+function isBodyValid(req: Request): boolean{
+  const expectedKeys = ["name", "email"]; // a medida que mais chaves forem sendo adicionadas, modificar aqui
+  for (const key of expectedKeys) {
+    if (!(key in req.body)) return false;
+  }
+  return true;
 }
 
 /**
  * Função: valida se o corpo da requisição é válido
  */
 export default function validateRequestBody(req: Request, res: Response, next: NextFunction) {
-  const { name, email }: RequestBody = req.body;
-  let errors: iError[] = [];
-
-  if (!validator.isEmail(email.trim())) errors.push({error: "email inválido", invalidField: "email"});
-  if (validator.isEmpty(name.trim())) errors.push({error: "nome vazio", invalidField: "nome"});
+  if (!isBodyValid(req)) {
+    return res.status(Status.BadRequest).json([{error: "corpo inválido"}])
+  }
   
-  if (errors.length) return res.status(Status.BadRequest).json(errors);
+  const { name, email } = req.body;
+
+  let errors: object[] = [];
+  if (!validator.isEmail(email.trim())) errors.unshift({error: "email inválido"})
+  if (!validator.isLength(name.trim(), { min: 3, max: 50 })) errors.unshift({error: "nome inválido"})
+
+  if (errors.length) return res.status(Status.BadRequest).json(errors); 
   next();
 }
