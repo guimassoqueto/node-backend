@@ -27,12 +27,17 @@ app.use(errorManager);
 // inicia a aplicação
 (async function main() {
   try {
-    await mongoConnector
-    console.log(`Example app listening on port ${APP_PORT}`);
-  }
-  catch (error) {
+
+    await mongoConnector;
+    app.listen(APP_PORT, () => {
+      console.log("Connected. Listening to port", APP_PORT)
+    })
+
+  } catch (error) {
+
     console.error("\x1b[31m", 
-      "Erro ao conectar-se ao banco de dados.\n",
-      "Verifique se a variável MONGO_HOST está corretamente definida em .env"
-    )}
-})();
+    "Erro ao conectar-se ao banco de dados.\n",
+    "Verifique se a variável MONGO_HOST está corretamente definida em .env");
+
+  }
+})()
