@@ -4,23 +4,27 @@ import CustomError from "../errors/CustomError.error";
 import User from "../models/user.model";
 
 /**
- * Rota: /user  
+ * Rota: /users  
  * Método: GET  
  * Função: retorna todos os usuários
  */
-export function getAllUsers(req: Request, res: Response) {
-  const mock = [
-    {name: "Oseas", age: 15},
-    {name: "Clovis", age: 12},
-    {name: "Nestor", age: 8}
-  ]
+export async function getAllUsers(req: Request, res: Response, next: NextFunction) {
+  try {
+    const allUsers = await User.find();
+    return res.status(Status.OK).json(allUsers);
+  }
+  catch (e){
+    // apenas para ilustração
+    console.error(e);
 
-  return res.status(Status.OK).json(mock);
+    const error = new CustomError(Status.ServiceUnavailable, "Ocorreu um erro, tente mais tarde");
+    next(error);
+  }
 }
 
 
 /**
- * Rota: /user/:id  
+ * Rota: /users/:id  
  * Método: GET  
  * Função: retorna um usuário
  */
@@ -29,20 +33,19 @@ export async function getUser(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     const user = await User.findById(id);
 
-    if (!user) {
-      throw new CustomError(Status.NotFound, "User Not Found");
-    }
+    if (!user) return next(new CustomError(Status.NotFound, "User Not Found"));
 
     return res.status(Status.OK).json(user);
     
-  } catch(error) {
-    next(error);
+  } catch(e) {
+    console.error(e);
+    next(new CustomError(Status.ServiceUnavailable, "Ocorreu um erro, tente mais tarde"));
   }
 }
 
 
 /**
- * Rota: /user  
+ * Rota: /users  
  * Método: POST  
  * Função: insere um usuário
  */
