@@ -8,6 +8,10 @@ import { APP_PORT } from './settings';
 
 const app = express();
 
+
+// CORS
+app.use(setCors);
+
 // body-parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
