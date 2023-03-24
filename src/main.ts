@@ -22,9 +22,7 @@ app.use(morgan("dev"));
 
 // routes
 app.use("/users", usersRoute);
-
-// rota com erro proposital
-app.use("/errors", errorsRoute);
+app.use("/errors", errorsRoute); // rota com erro proposital
 
 // middleware que trata todos os erros
 app.use(errorManager);
