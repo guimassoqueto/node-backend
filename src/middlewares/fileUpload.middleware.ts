@@ -1,21 +1,13 @@
 import multer from 'multer';
 import path from 'path';
-import { v4 as uuid4 } from 'uuid';
 
-const uploadsLocation = path.format({
-  root: path.resolve(__dirname),
-  dir: "uploads"
-})
-
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsLocation)
+const memStorage = multer.memoryStorage();
+export const memoryUpload = multer({ 
+  storage: memStorage,
+  fileFilter: (_req, file, callback) => {
+    checkFileType(file, callback);
   },
-  filename: function (_req, file, cb) {
-    const extension = file.mimetype.split("/").pop();
-    cb(null, `${uuid4()}.${extension}`);
-  },
-})
+});
 
 function checkFileType(file: Express.Multer.File, callback: multer.FileFilterCallback) {
   // Allowed ext
@@ -31,9 +23,3 @@ function checkFileType(file: Express.Multer.File, callback: multer.FileFilterCal
   return callback(null, false);
 }
 
-export const fileUpload = multer({
-  storage: storage,
-  fileFilter: (_req, file, callback) => {
-    checkFileType(file, callback);
-  }
-});
