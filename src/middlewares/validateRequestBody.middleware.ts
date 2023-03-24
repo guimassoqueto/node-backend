@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import validator from 'validator';
 import { Status } from '../enums/statusCodes.enum';
 
-
+/**
+ * Função: verifica se as chaves necessárias (email e name) encontram-se em req.body
+ */
 function isBodyValid(req: Request): boolean{
   const expectedKeys = ["name", "email"]; // a medida que mais chaves forem sendo adicionadas, modificar aqui
   for (const key of expectedKeys) {
