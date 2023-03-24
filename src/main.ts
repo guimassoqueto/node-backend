@@ -5,6 +5,7 @@ import errorManager from './middlewares/errorManager.middleware';
 import setCors from './middlewares/setCors.middleware';
 import { mongoConnector } from './database/mongoConnector.database';
 import { APP_PORT } from './settings';
+import morgan from 'morgan';
 
 const app = express();
 
@@ -16,8 +17,8 @@ app.use(setCors);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS
-app.use(setCors);
+// morgan
+app.use(morgan("dev"));
 
 // routes
 app.use("/users", usersRoute);
