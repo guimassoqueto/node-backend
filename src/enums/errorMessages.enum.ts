@@ -3,5 +3,6 @@ export enum ErrorMessage {
   NotFound = "Resource not found",
   InvalidFileFormat = "Invalid file format",
   InvalidRequestBody = "Invalid request body",
-  EmailAlreadyInUse = "Email already in use"
+  EmailAlreadyInUse = "Email already in use",
+  InvalidPassword = "Password does not match"
 }
