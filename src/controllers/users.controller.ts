@@ -59,8 +59,8 @@ export async function getUser(req: Request, res: Response, next: NextFunction) {
  */
 export async function postUser(req: Request, res: Response, next: NextFunction) {
   try {
-    const { name, email } = req.body;
-    const user = new User({ name, email })
+    const { name, email, password } = req.body;
+    const user = new User({ name, email, password })
     await user.save();
 
     return res.status(Status.Created).json({id: user?.id, name, email});

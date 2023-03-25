@@ -17,7 +17,8 @@ const userSchema = new Schema({
     required: true
   },
   password: {
-    type: String
+    type: String,
+    required: true
   }
 }, {timestamps: true}); // insere uma data sempre que um novo usuário é adicionado
 
