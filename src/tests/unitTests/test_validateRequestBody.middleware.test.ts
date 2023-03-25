@@ -1,5 +1,6 @@
 import validateRequestBody from "../../middlewares/validateRequestBody.middleware";
 import { Request, Response, NextFunction } from "express";
+import { ErrorMessage } from "../../enums/errorMessages.enum";
 
 describe("validateRequestBody middleware", () => {
   let mockRequest: Partial<Request>;
@@ -15,7 +16,7 @@ describe("validateRequestBody middleware", () => {
   });
 
   test('invalid body should return error', async () => {
-    const expectedResponse = [{error: "corpo inválido"}];
+    const expectedResponse = [{error: ErrorMessage.InvalidRequestBody}];
     mockRequest = {
       body: {
         invalidKey: "test",
@@ -35,11 +36,12 @@ describe("validateRequestBody middleware", () => {
   });
 
   test('short name should return error', async () => {
-    const expectedResponse = [{error: "nome inválido"}];
+    const expectedResponse = [{error: "Invalid name"}];
     mockRequest = {
       body: {
         name: "aa",
-        email: "test@test.com"
+        email: "test@yahoo.com",
+        password: "###!!!AAAbbb111222"
       }
     }
 
@@ -55,12 +57,13 @@ describe("validateRequestBody middleware", () => {
   });
 
   test("wrong email format", async () => {
-    const expectedResponse = [{error: "email inválido"}];
+    const expectedResponse = [{error: "Invalid email"}];
 
     mockRequest = {
       body: {
         name: "Guilherme",
-        email: "test"
+        email: "test.com",
+        password: "###!!!AAAbbb111222"
       }
     }
 
@@ -76,12 +79,13 @@ describe("validateRequestBody middleware", () => {
   });
 
   test("empty name provided should return error", async () => {
-    const expectedResponse = [{error: "nome inválido"}];
+    const expectedResponse = [{error: "Invalid name"}];
 
     mockRequest = {
       body: {
         name: "",
-        email: "test@gmail.com"
+        email: "adidas@gmail.com",
+        password: "###!!!AAAbbb111222"
       }
     }
 
@@ -97,12 +101,35 @@ describe("validateRequestBody middleware", () => {
   });
 
   test("invalid name and email", async () => {
-    const expectedResponse = [{error: "nome inválido"}, {error: "email inválido"}];
+    const expectedResponse = [{error: "Invalid name"}, {error: "Invalid email"}];
 
     mockRequest = {
       body: {
         name: "aa",
-        email: "test"
+        email: "test",
+        password: "###!!!AAAbbb111222"
+      }
+    }
+
+    validateRequestBody(
+      mockRequest as Request,
+      mockResponse as Response,
+      nextFunction
+    );
+
+    expect(mockResponse.status).toBeCalledWith(400);
+    expect(mockResponse.json).toBeCalledWith(expectedResponse);
+    expect(nextFunction).not.toBeCalled();
+  });
+
+  test("Weak password should return error", async () => {
+    const expectedResponse = [{error: "Weak password"}];
+
+    mockRequest = {
+      body: {
+        name: "guilherme",
+        email: "test@yahoo.com",
+        password: "password123"
       }
     }
 
@@ -121,7 +148,8 @@ describe("validateRequestBody middleware", () => {
     mockRequest = {
       body: {
         name: "Username",
-        email: "test@gmail.com"
+        email: "test@hotmail.com",
+        password: "###!!!AAAbbb111222"
       }
     }
 

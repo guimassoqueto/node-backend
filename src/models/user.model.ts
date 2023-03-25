@@ -15,6 +15,9 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true
+  },
+  password: {
+    type: String
   }
 }, {timestamps: true}); // insere uma data sempre que um novo usuário é adicionado
 
