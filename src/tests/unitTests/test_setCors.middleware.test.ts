@@ -23,7 +23,7 @@ describe("setCors middleware", () => {
 
     expect(mockResponse.setHeader).toBeCalledTimes(3);
     expect(mockResponse.setHeader).toBeCalledWith('Access-Control-Allow-Origin', '*');
-    expect(mockResponse.setHeader).toBeCalledWith('Access-Control-Allow-Methods', 'GET, POST');
+    expect(mockResponse.setHeader).toBeCalledWith('Access-Control-Allow-Methods', 'GET, POST, DELETE');
     expect(mockResponse.setHeader).toBeCalledWith('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     expect(nextFunction).toBeCalled();
   })
