@@ -123,7 +123,7 @@ describe("validateRequestBody middleware", () => {
   });
 
   test("Weak password should return error", async () => {
-    const expectedResponse = [{error: "Weak password"}];
+    const expectedResponse = [{error: "Invalid password"}];
 
     mockRequest = {
       body: {

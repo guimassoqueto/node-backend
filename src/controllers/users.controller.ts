@@ -3,7 +3,7 @@ import { Status } from "../enums/statusCodes.enum";
 import { ErrorMessage } from "../enums/errorMessages.enum";
 import CustomError from "../errors/CustomError.error";
 import User from "../models/user.model";
-
+import Crypt from "../utils/Crypt.util";
 
 /**
  * Rota: /users  
@@ -64,7 +64,7 @@ export async function postUser(req: Request, res: Response, next: NextFunction) 
     const emailInUse = await User.findOne({email: email}).count() !== 0;
     if (emailInUse) return next(new CustomError(Status.BadRequest, ErrorMessage.EmailAlreadyInUse));
 
-    const user = new User({ name, email, password });
+    const user = new User({ name, email, password: await Crypt.hashString(password) });
     await user.save();
 
     return res.status(Status.Created).json({id: user?.id, name, email});
@@ -86,14 +86,16 @@ export async function postUser(req: Request, res: Response, next: NextFunction) 
 export async function updateUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    const { name, email } = req.body;
+    const { name, email, password } = req.body;
 
     let user = await User.findById(id);
     if (!user) return next(new CustomError(Status.NotFound, ErrorMessage.NotFound));
     
-    // precisa melhorar esta lógica
-    user.name = name;
+    const passwordMatch = await Crypt.checkHash(password, user.password);
+    if (!passwordMatch) return next(new CustomError(Status.Forbidden, ErrorMessage.InvalidPassword));
+    
     user.email = email;
+    user.name = name;
     user.save();
 
     return res.status(Status.OK).json(user);
