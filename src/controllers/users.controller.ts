@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { Status } from "../enums/statusCodes.enum";
+import { ErrorMessage } from "../enums/errorMessages.enum";
 import CustomError from "../errors/CustomError.error";
 import User from "../models/user.model";
+
 
 /**
  * Rota: /users  
@@ -10,14 +12,18 @@ import User from "../models/user.model";
  */
 export async function getAllUsers(req: Request, res: Response, next: NextFunction) {
   try {
-    const allUsers = await User.find();
-    return res.status(Status.OK).json(allUsers);
+    // lógica de paginação
+    const currentPage = parseInt(req.query.currentPage as string) || 1;
+    const perPage = parseInt(req.query.perPage as string) || Infinity;
+    const totalUsers = (await User.find()).length;
+    const users = await User.find().skip((currentPage - 1) * perPage).limit(perPage);
+
+    return res.status(Status.OK).json({totalUsers, users});
   }
   catch (e){
     // apenas para ilustração
     console.error(e);
-
-    const error = new CustomError(Status.ServiceUnavailable, "Ocorreu um erro, tente mais tarde");
+    const error = new CustomError(Status.ServiceUnavailable, ErrorMessage.Generic);
     next(error);
   }
 }
@@ -33,14 +39,14 @@ export async function getUser(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     const user = await User.findById(id);
 
-    if (!user) return next(new CustomError(Status.NotFound, "User Not Found"));
+    if (!user) return next(new CustomError(Status.NotFound, ErrorMessage.NotFound));
 
     return res.status(Status.OK).json(user);
     
   } catch(e) {
     console.error(e);
     next(
-      new CustomError(Status.ServiceUnavailable, "Ocorreu um erro, tente mais tarde")
+      new CustomError(Status.ServiceUnavailable, ErrorMessage.Generic)
     );
   }
 }
@@ -62,13 +68,14 @@ export async function postUser(req: Request, res: Response, next: NextFunction) 
   catch (error) {
     console.error(error);
     next(
-      new CustomError(Status.InternalServerError, "Ocorreu um erro, tente mais tarde")
+      new CustomError(Status.InternalServerError, ErrorMessage.Generic)
     );
   }
 }
 
+
 /**
- * Rota: /users  
+ * Rota: /users/:id  
  * Método: PUT  
  * Função: atualiza um usuário
  */
@@ -78,7 +85,7 @@ export async function updateUser(req: Request, res: Response, next: NextFunction
     const { name, email } = req.body;
 
     let user = await User.findById(id);
-    if (!user) return next(new CustomError(Status.NotFound, "User Not Found"));
+    if (!user) return next(new CustomError(Status.NotFound, ErrorMessage.NotFound));
     
     // precisa melhorar esta lógica
     user.name = name;
@@ -90,7 +97,30 @@ export async function updateUser(req: Request, res: Response, next: NextFunction
   catch (error) {
     console.error(error);
     next(
-      new CustomError(Status.InternalServerError, "Ocorreu um erro, tente mais tarde")
+      new CustomError(Status.InternalServerError, ErrorMessage.Generic)
     )
+  }
+}
+
+
+/**
+ * Rota: /users/:id  
+ * Método: GET  
+ * Função: retorna todos os usuários
+ */
+export async function deleteUser(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id } = req.params;
+    const user = await User.findByIdAndDelete(id);
+
+    if (!user) return next(new CustomError(Status.NotFound, ErrorMessage.NotFound));
+
+    return res.status(Status.NoContent).json();
+  }
+  catch (e){
+    // apenas para ilustração
+    console.error(e);
+    const error = new CustomError(Status.ServiceUnavailable, ErrorMessage.Generic);
+    next(error);
   }
 }
