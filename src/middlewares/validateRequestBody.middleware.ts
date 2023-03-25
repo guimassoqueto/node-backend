@@ -29,7 +29,7 @@ export default function validateRequestBody(req: Request, res: Response, next: N
   let errors: object[] = [];
   if (!validator.isEmail(email.trim())) errors.unshift({error: "Invalid email"});
   if (!validator.isLength(name.trim(), { min: 3, max: 50 })) errors.unshift({error: "Invalid name"});
-  if (!validator.isStrongPassword(password)) errors.unshift({error: "Weak password"});
+  if (!validator.isStrongPassword(password)) errors.unshift({error: "Invalid password"});
 
   if (errors.length) return res.status(Status.BadRequest).json(errors); 
   next();
