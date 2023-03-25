@@ -21,21 +21,23 @@ export class S3Service {
     },
     region: AWS_REGION
   }
-  private client = new S3Client(this.config);
-  private ACL: ACLType;
+  private readonly client = new S3Client(this.config);
+  private bucket = AWS_S3_BUCKET;
+  
+  private permission: ACLType;
   private params: IParams;
   private filename: string;
-  public S3Location?: string; 
+  public S3FileLocation?: string; 
 
-  constructor (file: Express.Multer.File, acl: ACLType = "public-read-write") {
-    this.ACL = acl;
+  constructor (file: Express.Multer.File, permission: ACLType = "public-read-write") {
+    this.permission = permission;
     this.filename = `${uuid4()}.${file.mimetype.split("/").pop()}`
     this.params = {
-      Bucket: AWS_S3_BUCKET,
+      Bucket: this.bucket,
       Key: this.filename,
       Body: file.buffer,
       ContentType: file.mimetype,
-      ACL: this.ACL
+      ACL: this.permission
     }
   }
 
@@ -43,8 +45,7 @@ export class S3Service {
     try {
       const command = new PutObjectCommand(this.params);
       await this.client.send(command);
-      this.S3Location = `https://${AWS_S3_BUCKET}.s3.us-east-2.amazonaws.com/${this.filename}`
-
+      this.S3FileLocation = `https://${this.bucket}.s3.${AWS_REGION}.amazonaws.com/${this.filename}`;
     } catch (error) {
       throw error;
     }
