@@ -60,6 +60,10 @@ export async function getUser(req: Request, res: Response, next: NextFunction) {
 export async function postUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { name, email, password } = req.body;
+
+    const emailInUse = await User.findOne({email: email}).count() !== 0;
+    if (emailInUse) return next(new CustomError(Status.BadRequest, ErrorMessage.EmailAlreadyInUse))
+
     const user = new User({ name, email, password })
     await user.save();
 
