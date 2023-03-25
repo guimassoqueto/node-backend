@@ -62,9 +62,9 @@ export async function postUser(req: Request, res: Response, next: NextFunction) 
     const { name, email, password } = req.body;
 
     const emailInUse = await User.findOne({email: email}).count() !== 0;
-    if (emailInUse) return next(new CustomError(Status.BadRequest, ErrorMessage.EmailAlreadyInUse))
+    if (emailInUse) return next(new CustomError(Status.BadRequest, ErrorMessage.EmailAlreadyInUse));
 
-    const user = new User({ name, email, password })
+    const user = new User({ name, email, password });
     await user.save();
 
     return res.status(Status.Created).json({id: user?.id, name, email});
