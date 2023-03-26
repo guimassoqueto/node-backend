@@ -3,7 +3,7 @@ import { Status } from "../enums/statusCodes.enum";
 import { ErrorMessage } from "../enums/errorMessages.enum";
 import CustomError from "../errors/CustomError.error";
 import User from "../models/user.model";
-import Crypt from "../utils/Crypt.util";
+import Crypt from "../utils/Crypt.class.util";
 
 /**
  * Rota: /users  
@@ -86,7 +86,7 @@ export async function postUser(req: Request, res: Response, next: NextFunction) 
 export async function updateUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    const { name, email, password } = req.body;
+    const { name, email, password, new_password } = req.body;
 
     let user = await User.findById(id);
     if (!user) return next(new CustomError(Status.NotFound, ErrorMessage.NotFound));
@@ -96,6 +96,7 @@ export async function updateUser(req: Request, res: Response, next: NextFunction
     
     user.email = email;
     user.name = name;
+    user.password = await Crypt.hashString(new_password);
     user.save();
 
     return res.status(Status.OK).json(user);

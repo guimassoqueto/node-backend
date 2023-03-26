@@ -1,4 +1,4 @@
-import Crypt from "../../utils/Crypt.util";
+import Crypt from "../../utils/Crypt.class.util";
 
 describe("basic Hashing test", () => {
   test("", async () => {
