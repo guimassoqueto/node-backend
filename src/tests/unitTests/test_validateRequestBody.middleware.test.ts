@@ -1,6 +1,6 @@
 import validateRequestBody from "../../middlewares/validateRequestBody.middleware";
 import { Request, Response, NextFunction } from "express";
-import { ErrorMessage } from "../../enums/errorMessages.enum";
+
 
 describe("validateRequestBody middleware", () => {
   let mockRequest: Partial<Request>;
@@ -13,26 +13,6 @@ describe("validateRequestBody middleware", () => {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
-  });
-
-  test('invalid body should return error', async () => {
-    const expectedResponse = [{error: ErrorMessage.InvalidRequestBody}];
-    mockRequest = {
-      body: {
-        invalidKey: "test",
-        another: "test"
-      }
-    }
-
-    validateRequestBody(
-      mockRequest as Request,
-      mockResponse as Response,
-      nextFunction
-    );
-
-    expect(mockResponse.status).toBeCalledWith(400);
-    expect(mockResponse.json).toBeCalledWith(expectedResponse);
-    expect(nextFunction).not.toBeCalled();
   });
 
   test('short name should return error', async () => {

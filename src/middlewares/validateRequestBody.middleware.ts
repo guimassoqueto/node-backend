@@ -1,36 +1,44 @@
 import { Request, Response, NextFunction } from 'express';
 import validator from 'validator';
 import { Status } from '../enums/statusCodes.enum';
-import { ErrorMessage } from '../enums/errorMessages.enum';
 
-
-const expectedKeys = ["name", "email", "password"];
-/**
- * Função: verifica se as chaves necessárias (email e name) encontram-se em req.body
- */
-function isBodyValid(req: Request): boolean{
-   // a medida que mais chaves forem sendo adicionadas, modificar aqui
-  for (const key of expectedKeys) {
-    if (!(key in req.body)) return false;
-  }
-  return true;
+interface IError {
+  error: string;
 }
 
-/**
- * Função: valida se o corpo da requisição é válido
- */
+function validateField(key: string, value: any): IError | null {
+
+    if (key == "name") {
+      if ( !validator.isLength((value as string).trim(), { min: 3, max: 50 }) ) return { error: "Invalid name"};
+    }
+      
+    if (key == "email") {
+      if ( !validator.isEmail((value as string).trim()) ) return { error: "Invalid email"};
+    }
+      
+    if (key == "password") {
+      if( !validator.isStrongPassword(value as string) ) return { error: "Invalid password"};
+    }
+
+    if (key == "new_password") {
+      if( !validator.isStrongPassword(value as string) ) return { error: "Weak new password. Try another."};
+    }
+      
+    return null
+}
+
+
+
 export default function validateRequestBody(req: Request, res: Response, next: NextFunction) {
-  if (!isBodyValid(req)) {
-    return res.status(Status.BadRequest).json([{error: ErrorMessage.InvalidRequestBody}])
+  let errorsSet = new Set(); 
+
+  for (const [key, value] of Object.entries(req.body)) {
+    errorsSet.add(validateField(key, value));
   }
-  
-  const { name, email, password } = req.body;
+  errorsSet.delete(null);
 
-  let errors: object[] = [];
-  if (!validator.isEmail(email.trim())) errors.unshift({error: "Invalid email"});
-  if (!validator.isLength(name.trim(), { min: 3, max: 50 })) errors.unshift({error: "Invalid name"});
-  if (!validator.isStrongPassword(password)) errors.unshift({error: "Invalid password"});
+  const errors = Array.from(errorsSet);
+  if (errors.length != 0) return res.status(Status.BadRequest).json(errors);
 
-  if (errors.length) return res.status(Status.BadRequest).json(errors); 
   next();
 }
