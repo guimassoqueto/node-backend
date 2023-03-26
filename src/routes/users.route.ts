@@ -8,5 +8,5 @@ export const usersRoute = Router();
 usersRoute.get("/", getAllUsers);
 usersRoute.post("/", checkRequestBodyKeys(["name", "email", "password"]), validateRequestBody, postUser);
 usersRoute.get('/:id', getUser);
-usersRoute.put('/:id', checkRequestBodyKeys(["name", "email", "password", "new_password"]), validateRequestBody, updateUser);
+usersRoute.put('/:id', checkRequestBodyKeys(["name", "email", "password"]), validateRequestBody, updateUser);
 usersRoute.delete('/:id', deleteUser)
