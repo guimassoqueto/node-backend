@@ -4,6 +4,9 @@ NPM=npm run
 up: 
 	${COMPOSE} up -d
 
+down:
+	${COMPOSE} down
+
 app:
 	${COMPOSE} up app -d
 
@@ -21,3 +24,6 @@ w:
 
 nodemon:
 	${NPM} nodemon
+
+init:
+	${NPM} install && cat .env.example 1> .env
