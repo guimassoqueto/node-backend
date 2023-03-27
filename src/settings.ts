@@ -7,6 +7,8 @@ const MONGO_DB_NAME = process.env.MONGO_DB_NAME || "test";
 const MONGO_HOST = process.env.MONGO_HOST || "0.0.0.0";
 const MONGO_PORT = process.env.MONGO_PORT || "27017";
 
+export const TOKEN_NAME = "node-backend";
+
 export const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || "";
 export const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY || "";
 export const AWS_REGION = process.env.AWS_REGION || "";
