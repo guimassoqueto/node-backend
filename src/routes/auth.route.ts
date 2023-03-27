@@ -1,7 +1,7 @@
 import { Router } from "express";
 import postAuth from "../controllers/auth.controller";
-import checkRequestBodyKeys from "../middlewares/checkRequestBodyKeys.middleware"
+import requiredReqBodyKeys from "../middlewares/requiredReqBodyKeys.middleware"
 
 export const authRoute = Router();
 
-authRoute.post("/", checkRequestBodyKeys(["email", "password"]), postAuth);
+authRoute.post("/", requiredReqBodyKeys(["email", "password"]), postAuth);

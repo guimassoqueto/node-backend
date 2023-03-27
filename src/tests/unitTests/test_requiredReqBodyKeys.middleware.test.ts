@@ -1,8 +1,8 @@
-import checkRequestBodyKeys from "../../middlewares/checkRequestBodyKeys.middleware";
+import requiredReqBodyKeys from "../../middlewares/requiredReqBodyKeys.middleware";
 import { Request, Response, NextFunction } from "express";
 
 
-describe("validateRequestBody middleware", () => {
+describe("requiredReqBodyKeys middleware", () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
   let nextFunction: NextFunction = jest.fn();
@@ -25,7 +25,7 @@ describe("validateRequestBody middleware", () => {
       }
     }
 
-    const check = checkRequestBodyKeys(
+    const check = requiredReqBodyKeys(
       ["name", "email", "password"]
     );
 

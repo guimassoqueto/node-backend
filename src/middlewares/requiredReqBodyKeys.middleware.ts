@@ -21,7 +21,7 @@ function check(expectedKeys: string[], req: Request): boolean{
   return true;
 }
 
-export default function checkRequestBodyKeys(expectedKeys: string[]) {
+export default function requiredReqBodyKeys(expectedKeys: string[]) {
   return (req: Request, res: Response, next: NextFunction) => {
     const isValid = check(expectedKeys, req);
 

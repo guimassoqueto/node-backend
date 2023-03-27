@@ -2,9 +2,7 @@ import isAuth from "../../middlewares/isAuth.middleware";
 import { Request, Response, NextFunction } from "express";
 import { Status } from "../../enums/statusCodes.enum";
 import { Message } from "../../enums/Messages.enum";
-import { IUser } from "../../models/user.model";
-import { v4 as uuid4 } from "uuid"; 
-import { generateUserToken } from "../../utils/token.util";
+
 
 describe("isAuth middleware", () => {
   let mockRequest: Partial<Request>;
