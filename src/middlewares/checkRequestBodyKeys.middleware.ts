@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ErrorMessage } from "../enums/errorMessages.enum";
+import { Message } from "../enums/Messages.enum";
 import { Status } from "../enums/statusCodes.enum";
 
 
@@ -27,6 +27,6 @@ export default function checkRequestBodyKeys(expectedKeys: string[]) {
 
     if (isValid) return next();
     
-    return res.status(Status.BadRequest).json({status: Status.BadRequest, error: ErrorMessage.InvalidRequestBody});
+    return res.status(Status.BadRequest).json({status: Status.BadRequest, error: Message.InvalidRequestBody});
   }
 }

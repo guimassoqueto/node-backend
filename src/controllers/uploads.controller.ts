@@ -2,13 +2,13 @@ import { NextFunction, Request, Response } from "express";
 import CustomError from "../errors/CustomError.error";
 import { Status } from "../enums/statusCodes.enum";
 import { S3Service } from "../cloud/s3Service";
-import { ErrorMessage } from "../enums/errorMessages.enum";
+import { Message } from "../enums/Messages.enum";
 
 
 export async function postUpload(req: Request, res: Response, next: NextFunction) {
   try {
     const { file } = req;
-    if (!file) return next(new CustomError(Status.BadRequest, ErrorMessage.InvalidFileFormat));;
+    if (!file) return next(new CustomError(Status.BadRequest, Message.InvalidFileFormat));;
     
     const s3 = new S3Service(file);
     await s3.upload();
@@ -17,6 +17,6 @@ export async function postUpload(req: Request, res: Response, next: NextFunction
     
   } catch (error) {
     console.error(error);
-    next(new CustomError(Status.ServiceUnavailable, ErrorMessage.Generic))
+    next(new CustomError(Status.ServiceUnavailable, Message.GenericError))
   }
 }
