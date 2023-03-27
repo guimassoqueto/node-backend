@@ -16,7 +16,7 @@ describe("validateRequestBody middleware", () => {
   });
 
   test('short name should return error', async () => {
-    const expectedResponse = [{error: "Invalid name"}];
+    const expectedResponse = {status: 400, error: "Invalid name"};
     mockRequest = {
       body: {
         name: "aa",
@@ -29,6 +29,11 @@ describe("validateRequestBody middleware", () => {
       ["name", "email", "password"]
     );
 
+    expect( check ).toEqual( expect.any(Function) )
+
+    // The middleware is called
+    check(mockRequest as Request, mockResponse as Response, nextFunction)
+    // And here you check if the res.json function was called with certain parameters
     expect( 1+1 ).toEqual(2)
   });
 });
