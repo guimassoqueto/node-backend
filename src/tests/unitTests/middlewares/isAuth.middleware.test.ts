@@ -1,7 +1,7 @@
-import isAuth from "../../middlewares/isAuth.middleware";
+import isAuth from "../../../middlewares/isAuth.middleware";
 import { Request, Response, NextFunction } from "express";
-import { Status } from "../../enums/statusCodes.enum";
-import { Message } from "../../enums/Messages.enum";
+import { Status } from "../../../enums/statusCodes.enum";
+import { Message } from "../../../enums/Messages.enum";
 
 
 describe("isAuth middleware", () => {

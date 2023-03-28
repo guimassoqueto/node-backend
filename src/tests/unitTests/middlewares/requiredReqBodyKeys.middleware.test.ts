@@ -1,4 +1,4 @@
-import requiredReqBodyKeys from "../../middlewares/requiredReqBodyKeys.middleware";
+import requiredReqBodyKeys from "../../../middlewares/requiredReqBodyKeys.middleware";
 import { Request, Response, NextFunction } from "express";
 
 

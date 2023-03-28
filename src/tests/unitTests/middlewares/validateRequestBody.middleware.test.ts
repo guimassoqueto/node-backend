@@ -1,4 +1,4 @@
-import validateRequestBody from "../../middlewares/validateRequestBody.middleware";
+import validateRequestBody from "../../../middlewares/validateRequestBody.middleware";
 import { Request, Response, NextFunction } from "express";
 
 
