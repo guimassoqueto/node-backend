@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Message } from "../enums/Messages.enum";
 import { Status } from "../enums/statusCodes.enum";
-import { decodeUserToken } from "../utils/token.util";
+import { decodeUserToken } from "../utils/functions/token.util";
 
 export default function isAuth(req: Request, res: Response, next: NextFunction) {
   try {

@@ -3,7 +3,7 @@ import { Status } from "../enums/statusCodes.enum";
 import { Message } from "../enums/Messages.enum";
 import CustomError from "../errors/CustomError.error";
 import User from "../models/user.model";
-import Crypt from "../utils/Crypt.class.util";
+import Crypt from "../utils/classes/Crypt.class.util";
 
 /**
  * Rota: /users  

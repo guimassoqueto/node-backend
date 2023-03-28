@@ -3,8 +3,8 @@ import { Message } from "../enums/Messages.enum";
 import { Status } from "../enums/statusCodes.enum";
 import CustomError from "../errors/CustomError.error";
 import User from "../models/user.model";
-import Crypt from "../utils/Crypt.class.util";
-import { generateUserToken } from "../utils/token.util";
+import Crypt from "../utils/classes/Crypt.class.util";
+import { generateUserToken } from "../utils/functions/token.util";
 
 /**
  * Rota: /auth  
@@ -15,7 +15,7 @@ export default async function postAuth(req: Request, res: Response, next: NextFu
   try {
     const { email, password } = req.body;
 
-    let user = await User.findOne({email: email});
+    const user = await User.findOne({email: email});
     if (!user) return next(new CustomError(Status.NotFound, Message.ResourceNotFound));
 
     const isPasswordMatch = await Crypt.checkHash(password, user.password);
