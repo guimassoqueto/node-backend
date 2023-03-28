@@ -15,7 +15,11 @@ const app = express();
 
 
 // CORS
-app.use(setCors);
+app.use(setCors({
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE"
+}));
 
 // body-parser
 app.use(express.json());
