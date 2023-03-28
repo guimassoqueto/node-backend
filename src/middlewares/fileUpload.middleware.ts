@@ -1,6 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 
+
 const memStorage = multer.memoryStorage();
 export const memoryUpload = multer({ 
   storage: memStorage,
@@ -8,6 +9,7 @@ export const memoryUpload = multer({
     checkFileType(file, callback);
   },
 });
+
 
 function checkFileType(file: Express.Multer.File, callback: multer.FileFilterCallback) {
   // Allowed ext
